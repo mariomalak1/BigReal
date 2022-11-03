@@ -3,7 +3,7 @@
 //this->floatPart.setNumber(floatPart.getNumber().erase(0,1));
 
 #include "BigReal.h"
-
+#include <regex>
 // user defined function to cut the string from I want that help me in BigReal
 // function that takes string that I want to cut from it and the first index and last index
 // return new string that is sub string from the param I pass it
@@ -65,7 +65,77 @@ void BigReal::addFloatParts(BigReal &real1, BigReal &real2, BigReal &answer) {
     }
 }
 
+
+bool  BigReal :: checkValidInput(string realNumber)
+{
+//    regex validInput("[+\-]?[0-9][.][0-9]");
+    regex validInput("([+|-]?[0-9]+(\.)?[0-9])|([+|-]?[0-9](\.)?[0-9]+)|([+|-]?[0-9]+(\.)?[0-9]+)");
+    return regex_match(realNumber, validInput);
+}
+
+
+BigReal::BigReal (const BigReal& other) // Copy constructor
+{
+    decimalPart = other.decimalPart;
+    floatPart = other.floatPart;
+    Sign=other.Sign;
+}
+
+
+
+BigReal::BigReal (BigReal&& other) // Move constructor
+{
+    decimalPart = other.decimalPart;
+    floatPart = other.floatPart;
+    Sign=other.Sign;
+}
+
+
+/////////////////////
+BigReal:: BigReal(string realNumber) {
+
+// first check validation
+    string number = "";
+    bool validNumber = checkValidInput(realNumber);
+    if (validNumber) {
+        number = realNumber;
+        if (number[0] == '+') {
+            number.erase(0, 1);
+            Sign = '+';
+        } else if (number[0] == '-') {
+            number.erase(0, 1);
+            Sign = '-';
+        } else {
+            Sign = '+';
+        }
+        string decimal = "", fraction = "";
+        while (number[0] != '.') {
+            decimal += number[0];
+            number.erase(number.begin());
+        }
+        number.erase(number.begin());
+        fraction = number;
+        BigDecimalInt dec(decimal);
+        BigDecimalInt frac(fraction);
+        decimalPart = dec;
+        floatPart = frac;
+    } else {
+        cout << "Invalid" << "\n";
+    }
+}
+
+BigReal::BigReal (BigDecimalInt bigInteger)
+{
+
+    decimalPart = bigInteger;
+
+}
+
+
+
 BigReal::BigReal(double realNumber) {
+
+
     this->decimalPart.setNumber(to_string(int (realNumber)));
     string fractionPart = to_string(realNumber - int(realNumber));
     cout << "fractionPart : " << fractionPart << endl;
