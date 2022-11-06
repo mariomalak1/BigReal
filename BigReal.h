@@ -12,19 +12,23 @@ such as: +, -, <, and >.
 
 #ifndef BIGREALV3_BIGREAL_H
 #define BIGREALV3_BIGREAL_H
-#include "BigDecimalIntClass.h"
 
+#include "BigDecimalIntClass.h"
 
 class BigReal {
 private:
     BigDecimalInt decimalPart;
     BigDecimalInt floatPart;
     char Sign;
+
+    static bool checkValidInput(string realNumber);
     void addFloatParts(BigReal &real1, BigReal &real2, BigReal &answer);
+    void subtractFloatParts(BigReal &real1, BigReal &real2, BigReal &answer);
+    string completeWithZeroes(string str, int len);
+    void removeZeroes(BigReal &number);
 public:
     BigReal (double realNumber = 0.0); // Default constructor
     BigReal (string realNumber);
-    bool   checkValidInput(string realNumber);
     BigReal (BigDecimalInt bigInteger);
     BigReal (const BigReal& other); // Copy constructor
     BigReal (BigReal&& other); // Move constructor
@@ -32,13 +36,13 @@ public:
     BigReal& operator= (BigReal&& other); // Move assignment
     BigReal operator+ (BigReal& other);
     BigReal operator- (BigReal& other);
-    bool operator< (BigReal &anotherReal);
-    bool operator> (BigReal &anotherReal);
-    bool operator== (BigReal &anotherReal);
+    bool operator< (BigReal anotherReal);
+    bool operator> (BigReal anotherReal);
+    bool operator== (BigReal anotherReal);
     int size();
     int sign();
-    friend ostream& operator << (ostream& out, BigReal& num);
-    friend istream& operator >> (istream& in, BigReal& num);
+    friend ostream& operator << (ostream& out, BigReal num);
+    friend istream& operator >> (istream& out, BigReal& num);
 };
 
 
